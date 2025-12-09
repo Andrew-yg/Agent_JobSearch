@@ -1,0 +1,108 @@
+.cardContainer {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 30px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+
+    /* Liquid Glass: Backdrop and Border */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cardContainer:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.leftSection {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.logoPlaceholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #000;
+    font-size: 20px;
+}
+
+.jobInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.roleTitle {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.companyName {
+    color: #a1a1aa;
+    font-size: 14px;
+}
+
+.metaData {
+    display: flex;
+    gap: 8px;
+    color: #71717a;
+    font-size: 13px;
+    flex-wrap: wrap;
+}
+
+.rightSection {
+    display: flex;
+    gap: 10px;
+}
+
+.saveButton {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.saveButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+.applyButton {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.applyButton:hover {
+    background: #e4e4e7;
+    transform: scale(1.05);
+}

@@ -1,0 +1,195 @@
+.container {
+    width: 100%;
+    max-width: 650px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: 'Inter', sans-serif;
+    z-index: 100;
+    position: relative;
+    align-items: center;
+}
+
+/* 
+   iOS 26 Liquid Glass Style 
+*/
+
+.glassCard {
+    position: relative;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 42px;
+    /* Smoother radius */
+    padding: 32px;
+    overflow: hidden;
+    box-shadow: 0 4px 50px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+
+    /* Backdrop Blur + Blend Modes from snippet */
+    backdrop-filter: blur(45px);
+    -webkit-backdrop-filter: blur(45px);
+}
+
+/* Layering for the "Liquid" effect */
+.glassCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 42px;
+    background: rgba(84, 84, 84, 0.1);
+    mix-blend-mode: normal;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.glassCard::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    mix-blend-mode: plus-lighter;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Inner glow/blend layers simulated */
+.glassEffectLayer1 {
+    position: absolute;
+    inset: 0;
+    border-radius: 42px;
+    background: rgba(217, 217, 217, 0.05);
+    /* Lower opacity for dark mode adaptation */
+    filter: blur(4px);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
+
+.progressHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: #ececfb;
+    font-size: 16px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.percentage {
+    color: #fff;
+    font-weight: 700;
+    font-family: 'SF Pro', sans-serif;
+}
+
+.progressBarContainer {
+    height: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+}
+
+.progressBarFill {
+    height: 100%;
+    background: linear-gradient(90deg, #22d3ee, #a855f7);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+    transition: width 0.1s linear;
+    /* Smooth linear update for 10s duration */
+}
+
+/* Task List */
+.taskList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.taskItem {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    padding: 12px 16px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    /* Slight distinct background */
+}
+
+.taskItem.pending {
+    color: #666;
+    background: transparent;
+}
+
+.taskItem.active {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.taskItem.completed {
+    color: #fff;
+}
+
+.iconContainer {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkIcon {
+    color: #22d3ee;
+    /* Cyan match */
+    width: 20px;
+    height: 20px;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #a855f7;
+    /* Purple accent */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.statusText {
+    text-align: center;
+    color: #a1a1aa;
+    font-size: 14px;
+    margin-top: 24px;
+    animation: pulse 2s infinite;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}

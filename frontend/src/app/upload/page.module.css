@@ -1,0 +1,311 @@
+/* Main Page Background to match theme */
+.main {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #000;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Section - Centered Container */
+.section {
+    position: absolute;
+    width: 1440px;
+    max-width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100px;
+    /* Adjusted from 1825px to be visible */
+    height: 800px;
+    /* Arbitrary height to contain elements */
+}
+
+/* Rising Stars */
+.risingStarsMaskGroup {
+    position: absolute;
+    height: 300px;
+    left: 40.21%;
+    right: 40.21%;
+    top: -100px;
+    overflow: hidden;
+    /* Simulating mask-group */
+}
+
+.risingStarsMask {
+    position: absolute;
+    height: 300px;
+    left: 0%;
+    right: 0%;
+    top: 0px;
+    background: linear-gradient(0deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+    /* If this is a mask, we might need composite operation, but CSS implies background specific */
+}
+
+.risingStars {
+    position: absolute;
+    height: 300px;
+    left: 0%;
+    right: 0%;
+    top: 0px;
+    opacity: 0.7;
+    /* Missing image or pattern from CSS? Assuming just a container for now */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Background Stars/Pixels (1px divs) */
+.bgStar1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: 0px;
+    top: 0px;
+    background: rgba(255, 255, 255, 0.002);
+    box-shadow: 1971px 210px 0px #FFFFFF, 699px 1124px 0px #FFFFFF, 1210px 799px 0px #FFFFFF, 521px 18px 0px #FFFFFF, 1793px 1493px 0px #FFFFFF, 36px 815px 0px #FFFFFF, 1776px 462px 0px #FFFFFF, 1701px 196px 0px #FFFFFF;
+    border-radius: 0.5px;
+}
+
+.bgStar2 {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    left: 0px;
+    top: 1px;
+    background: rgba(255, 255, 255, 0.002);
+    opacity: 0.5;
+    box-shadow: 655px 1820px 0px #FFFFFF, 1244px 1592px 0px #FFFFFF, 625px 264px 0px #FFFFFF, 744px 248px 0px #FFFFFF, 423px 1810px 0px #FFFFFF, 36px 428px 0px #FFFFFF, 797px 489px 0px #FFFFFF, 152px 1855px 0px #FFFFFF;
+    border-radius: 1px;
+}
+
+.bgStar3 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: 0px;
+    top: 3px;
+    background: rgba(255, 255, 255, 0.002);
+    opacity: 0.3;
+    box-shadow: 1467px 356px 0px #FFFFFF, 1163px 964px 0px #FFFFFF, 1671px 1944px 0px #FFFFFF, 374px 1634px 0px #FFFFFF, 1556px 820px 0px #FFFFFF, 1800px 1600px 0px #FFFFFF, 1314px 1935px 0px #FFFFFF, 1174px 1293px 0px #FFFFFF;
+    border-radius: 0.5px;
+}
+
+/* AI Showcase Container */
+.aiShowcase {
+    box-sizing: border-box;
+    position: absolute;
+    height: 140px;
+    left: 29.93%;
+    right: 29.93%;
+    top: 256px;
+
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0px 0px 0px 9px rgba(255, 255, 255, 0.03);
+    border-radius: 24px;
+}
+
+/* Outer Starlight Masks */
+.outerStarlightMaskGroup1 {
+    position: absolute;
+    width: 1px;
+    height: 356px;
+    left: 493px;
+    top: -132px;
+    overflow: hidden;
+}
+
+.outerStarlightMask1 {
+    position: absolute;
+    width: 1px;
+    height: 356px;
+    left: 0px;
+    top: 0px;
+    background: linear-gradient(180deg, rgba(217, 217, 217, 0) 0%, #D9D9D9 25%, #D9D9D9 75%, rgba(217, 217, 217, 0) 100%);
+}
+
+.outerStarlightMaskGroup2 {
+    position: absolute;
+    width: 1px;
+    height: 356px;
+    left: 289px;
+    top: -49px;
+    overflow: hidden;
+}
+
+.outerStarlightMaskGroup3 {
+    position: absolute;
+    width: 1px;
+    height: 356px;
+    left: 201px;
+    top: -49px;
+    overflow: hidden;
+}
+
+.outerStarlightMaskGroup4 {
+    position: absolute;
+    width: 1px;
+    height: 356px;
+    left: 377px;
+    top: -49px;
+    overflow: hidden;
+}
+
+
+/* AI Showcase Inner */
+.aiShowcaseInner {
+    box-sizing: border-box;
+    position: absolute;
+    width: 560px;
+    /* Use full width of parent minus margins? CSS says width 560px */
+    /* Parent is ~580px wide (1440 * (1 - 2*0.2993)) approx. */
+    /* Actually CSS says left 9px, top 9px, bottom 9px */
+    left: 9px;
+    top: 9px;
+    bottom: 9px;
+
+    background: radial-gradient(71.86% 50% at 50% 50%, rgba(168, 127, 255, 0.04) 0%, rgba(168, 127, 255, 0) 100%), rgba(4, 1, 21, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(7.5px);
+    border-radius: 16px;
+}
+
+.headerText {
+    position: absolute;
+    width: 244.71px;
+    height: 21px;
+    left: 33px;
+    top: 25px;
+
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.subText {
+    position: absolute;
+    width: 346.58px;
+    height: 20px;
+    left: 53px;
+    top: 73px;
+
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.dot {
+    position: absolute;
+    width: 4px;
+    left: 33px;
+    top: 83px;
+    bottom: 35px;
+    /* h = 125-35-83 = 7ish? */
+    height: 4px;
+    /* Fix height if bottom is tricky */
+    background: rgba(255, 255, 255, 0.24);
+    border-radius: 2px;
+}
+
+/* Vectors / Magic Button */
+.magicButtonContainer {
+    /* "Click to see AI magic" button text */
+    position: absolute;
+    width: 112.67px;
+    height: 20px;
+    left: calc(50% - 112.67px/2 + 185.11px);
+    /* Relative to Inner or Outer? inner is 560px. 50% = 280. */
+    top: 26px;
+
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    background: linear-gradient(90deg, #FC72FF 0%, #8F68FF 25%, #487BFF 50%, #2CD9FF 75%, #2CFFCC 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    cursor: pointer;
+}
+
+.magicButtonIcon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 384.78px;
+    top: 26px;
+    /* Approx aligned with text */
+}
+
+/* Vectors for icon */
+.vector1 {
+    position: absolute;
+    left: 40.62%;
+    right: 23.96%;
+    top: 32.29%;
+    bottom: 23.96%;
+    background: #FA5FFF;
+}
+
+.vector2 {
+    position: absolute;
+    left: 23.96%;
+    right: 57.29%;
+    top: 23.96%;
+    bottom: 57.29%;
+    background: #FA5FFF;
+}
+
+.vectorBorder {
+    position: absolute;
+    left: 23.96%;
+    right: 23.92%;
+    top: 23.96%;
+    bottom: 23.96%;
+    border: 1.5px solid #FA5FFF;
+}
+
+/* Inner Starlight (Top/Bottom gradients) */
+.innerStarlightMaskGroupTop {
+    position: absolute;
+    width: 180px;
+    height: 8px;
+    right: 57px;
+    top: 0px;
+    overflow: hidden;
+}
+
+.innerStarlightMaskTop {
+    position: absolute;
+    width: 180px;
+    height: 8px;
+    right: 0px;
+    top: 0px;
+    background: linear-gradient(90deg, rgba(217, 217, 217, 0) 0%, #D9D9D9 25%, #D9D9D9 75%, rgba(217, 217, 217, 0) 100%);
+}
+
+.innerStarlightBeforeTop {
+    position: absolute;
+    height: 1px;
+    left: 180px;
+    /* "right: -180px" in CSS? ::before relative to... */
+    /* CSS: left: 180px; right: -180px; top: 0px; */
+    width: 100%;
+    /* Simplified */
+    background: linear-gradient(90deg, rgba(201, 177, 255, 0) 0%, #C9B1FF 50%, rgba(201, 177, 255, 0) 100%);
+    opacity: 0.5;
+}

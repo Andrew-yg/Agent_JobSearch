@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120px 20px 40px 20px;
+    /* Increased top padding to clear header */
+    min-height: 100vh;
+}
+
+/* Liquid Glass Title Container based on snippet 2 */
+.headerContainer {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 84px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+
+    /* Glass Background */
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 42px;
+    backdrop-filter: blur(45px);
+    -webkit-backdrop-filter: blur(45px);
+
+    /* Border */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Text style inside the glass header */
+.headerTitle {
+    color: #fff;
+    font-family: 'SF Pro', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.jobList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 120px;
+    /* Extra padding for fade */
+}
+
+/* Fade Effect at the bottom */
+.bottomFade {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 10;
+}

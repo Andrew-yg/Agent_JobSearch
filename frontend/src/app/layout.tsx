@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Agent JobSearch",
-  description: "Building blocks for data security and compliance",
+  description: "AI agent for intelligent job discovery and perfect matches",
 };
 
 export default function RootLayout({

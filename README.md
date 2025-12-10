@@ -60,11 +60,6 @@
 4. 存储到向量数据库
 ```
 
-#### **模块 B: LinkedIn爬虫服务**
-```python
-推荐开源项目：
-- py-linkedin-jobs-scraper (最成熟)
-- JobSpy (支持多平台)
 
 关键功能：
 1. 基于用户需求构建查询：
@@ -74,12 +69,6 @@
    - 发布时间 (24h/week/month)
    - 工作类型 (remote/onsite/hybrid)
 
-2. 反爬虫策略：
-   - 代理池轮换
-   - 请求频率控制 (速率限制)
-   - Undetected ChromeDriver
-   - 随机User-Agent
-```
 
 #### **模块 C: RAG匹配引擎**
 ```python
@@ -166,10 +155,6 @@ chromadb  # 本地开发
 sentence-transformers  # 本地模型
 openai  # text-embedding-3-small
 
-# LinkedIn爬虫
-linkedin-jobs-scraper
-selenium
-undetected-chromedriver
 
 # 文档处理
 pypdf2
@@ -198,10 +183,9 @@ sqlalchemy
 **详细节点实现：**
 
 1. **parse_resume_node**：解析简历，提取结构化信息
-2. **scrape_linkedin_node**：基于用户偏好爬取职位（并行异步）
-3. **vector_search_node**：RAG检索Top 50
-4. **llm_scoring_node**：LLM深度评分Top 10
-5. **generate_report_node**：生成最终报告
+2. **vector_search_node**：RAG检索Top 50
+3. **llm_scoring_node**：LLM深度评分Top 10
+4. **generate_report_node**：生成最终报告
 
 ---
 
@@ -217,10 +201,6 @@ sqlalchemy
 | **RAG-based-job-search-assistant** | ⭐ | 使用RAG的求职助手 | [查看](https://github.com/kyosek/RAG-based-job-search-assistant) |
 | **Auto_job_applier_linkedIn** | ⭐ | 自动化申请工具 | [查看](https://github.com/GodsScion/Auto_job_applier_linkedIn) |
 
-### **2. 爬虫组件**
-
-- **py-linkedin-jobs-scraper** - Python爬虫库（推荐）
-- **JobSpy** - 多平台爬虫（LinkedIn, Indeed, Glassdoor等）
 
 ### **3. RAG参考实现**
 
@@ -304,3 +284,29 @@ Week 3:
 2. 安装依赖：`pip install -r requirements.txt`
 3. 配置环境变量（OpenAI API Key）
 4. 运行：`python main.py`
+
+### 第一步：使用浏览器自动化登录LinkedIn
+
+Playwright打开真实浏览器
+使用你的Chrome配置文件（保持登录状态）
+或者首次手动登录后保存session
+
+
+### 第二步：AI Agent接管操作
+
+Browser-Use或Playwright MCP控制浏览器
+搜索职位
+浏览页面
+提取数据
+
+
+### 第三步：本地RAG匹配
+
+将收集的职位存到本地Chroma
+用简历向量匹配
+LLM评分排序
+
+
+### 第四步：生成报告
+
+输出Top 10职位

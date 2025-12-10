@@ -40,6 +40,17 @@
     text-transform: uppercase;
 }
 
+/* Stats display */
+.statsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+
 .jobList {
     width: 100%;
     display: flex;

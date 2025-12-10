@@ -36,11 +36,10 @@
 /* Heading */
 .heading {
   position: absolute;
-  /* Centering logically or keeping user's fixed pos? User wants hover effects, so let's keep position but add transition */
   left: 194.41px;
-  top: 241.08px;
+  top: 160px;
+  /* Moved down to clear header */
   width: 600px;
-  /* Increased width to prevent wrapping issues if any */
 
   font-family: 'Segoe UI', sans-serif;
   font-weight: 400;
@@ -75,7 +74,8 @@
 .paragraph {
   position: absolute;
   left: 194.41px;
-  top: 468.25px;
+  top: 460px;
+  /* Adjusted to follow heading */
   width: 474.98px;
 
   font-family: 'Inter', sans-serif;
@@ -100,8 +100,8 @@
 .buttonsContainer {
   position: absolute;
   left: 194.41px;
-  top: 565px;
-  /* Adjusted up by half the difference */
+  top: 540px;
+  /* Adjusted to follow paragraph */
   z-index: 10;
   display: flex;
   gap: 16px;

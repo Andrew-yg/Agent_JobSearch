@@ -7,11 +7,11 @@ export default function Home() {
     <>
       {/* Hero Content */}
       <h1 className={styles.heading}>
-        Building blocks for data security and compliance
+        AI agent for intelligent job discovery and perfect matches
       </h1>
 
       <p className={styles.paragraph}>
-        Evervault provides developers with world-class infrastructure to solve complex data security and compliance problems in days, not months.
+        Let AI search LinkedIn 24/7, match jobs to your resume, and deliver your top 10 opportunities—while you focus on interview prep.
       </p>
 
       <div className={styles.buttonsContainer}>

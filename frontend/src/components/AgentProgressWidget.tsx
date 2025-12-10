@@ -7,69 +7,153 @@ import styles from "./AgentProgressWidget.module.css";
 interface AgentTask {
     id: string;
     label: string;
-    status: "pending" | "processing" | "completed";
+    status: "pending" | "processing" | "completed" | "error";
 }
+
+interface SearchParams {
+    resumeId: string;
+    keywords: string;
+    location: string;
+    experience: string;
+    postedTime: string;
+    jobType: string;
+}
+
+const API_BASE = "http://localhost:8000/api";
 
 export default function AgentProgressWidget() {
     const router = useRouter();
     const [progress, setProgress] = useState(0);
+    const [currentMessage, setCurrentMessage] = useState("Initializing...");
     const [tasks, setTasks] = useState<AgentTask[]>([
-        { id: "1", label: "Analyzing search intent", status: "pending" },
-        { id: "2", label: "Retrieving data sources", status: "pending" },
-        { id: "3", label: "Processing information", status: "pending" },
-        { id: "4", label: "Generating response", status: "pending" },
+        { id: "1", label: "Initializing browser", status: "pending" },
+        { id: "2", label: "Searching LinkedIn jobs", status: "pending" },
+        { id: "3", label: "Analyzing matches with AI", status: "pending" },
+        { id: "4", label: "Scoring and ranking", status: "pending" },
     ]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const totalDuration = 10000; // 10 seconds
-        const steps = 100;
-        const intervalTime = totalDuration / steps;
+        const startSearch = async () => {
+            // Get search params from sessionStorage
+            const paramsStr = sessionStorage.getItem("searchParams");
+            if (!paramsStr) {
+                setError("No search parameters found. Please go back and try again.");
+                return;
+            }
 
-        let currentProgress = 0;
+            const params: SearchParams = JSON.parse(paramsStr);
 
-        // Task timing breakpoints (approximate)
-        // 0-25%: Task 1
-        // 25-50%: Task 2
-        // 50-75%: Task 3
-        // 75-100%: Task 4
+            try {
+                // Start SSE connection
+                const response = await fetch(`${API_BASE}/search`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        resume_id: params.resumeId,
+                        keywords: params.keywords,
+                        location: params.location,
+                        experience: params.experience,
+                        posted_time: params.postedTime,
+                        job_type: params.jobType,
+                    }),
+                });
 
-        const updateTasks = (prog: number) => {
-            if (prog < 25) {
-                setTasks(prev => prev.map(t =>
-                    t.id === "1" ? { ...t, status: "processing" } : t));
-            } else if (prog === 25) {
-                setTasks(prev => prev.map(t =>
-                    t.id === "1" ? { ...t, status: "completed" } :
-                        t.id === "2" ? { ...t, status: "processing" } : t));
-            } else if (prog === 50) {
-                setTasks(prev => prev.map(t =>
-                    t.id === "2" ? { ...t, status: "completed" } :
-                        t.id === "3" ? { ...t, status: "processing" } : t));
-            } else if (prog === 75) {
-                setTasks(prev => prev.map(t =>
-                    t.id === "3" ? { ...t, status: "completed" } :
-                        t.id === "4" ? { ...t, status: "processing" } : t));
-            } else if (prog >= 100) {
-                setTasks(prev => prev.map(t =>
-                    t.id === "4" ? { ...t, status: "completed" } : t));
+                if (!response.ok) {
+                    throw new Error("Search request failed");
+                }
+
+                const reader = response.body?.getReader();
+                const decoder = new TextDecoder();
+
+                if (!reader) {
+                    throw new Error("No response stream");
+                }
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const text = decoder.decode(value);
+                    const lines = text.split("\n");
+
+                    for (const line of lines) {
+                        if (line.startsWith("data: ")) {
+                            const data = line.slice(6);
+
+                            if (data === "[DONE]") {
+                                // Search complete, navigate to report
+                                setTimeout(() => {
+                                    router.push("/report");
+                                }, 500);
+                                return;
+                            }
+
+                            try {
+                                const parsed = JSON.parse(data);
+
+                                if (parsed.type === "result") {
+                                    // Store results for report page
+                                    sessionStorage.setItem(
+                                        "searchResults",
+                                        JSON.stringify(parsed.data)
+                                    );
+                                    setProgress(100);
+                                    setTasks((prev) =>
+                                        prev.map((t) => ({
+                                            ...t,
+                                            status: "completed",
+                                        }))
+                                    );
+                                } else {
+                                    // Progress update
+                                    const step = parsed.step || 1;
+                                    const totalSteps = parsed.total || 4;
+                                    const newProgress = Math.round(
+                                        (step / totalSteps) * 100 -
+                                        (parsed.status === "processing" ? 10 : 0)
+                                    );
+                                    setProgress(Math.max(progress, newProgress));
+                                    setCurrentMessage(parsed.message || "Processing...");
+
+                                    // Update task statuses
+                                    setTasks((prev) =>
+                                        prev.map((t, idx) => {
+                                            if (idx + 1 < step) {
+                                                return { ...t, status: "completed" };
+                                            } else if (idx + 1 === step) {
+                                                return {
+                                                    ...t,
+                                                    status:
+                                                        parsed.status === "completed"
+                                                            ? "completed"
+                                                            : parsed.status === "error"
+                                                                ? "error"
+                                                                : "processing",
+                                                };
+                                            }
+                                            return t;
+                                        })
+                                    );
+
+                                    if (parsed.status === "error") {
+                                        setError(parsed.message);
+                                    }
+                                }
+                            } catch (e) {
+                                // Ignore parse errors for incomplete chunks
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "An error occurred");
             }
         };
 
-        const interval = setInterval(() => {
-            currentProgress += 1;
-            setProgress(currentProgress);
-            updateTasks(currentProgress);
-
-            if (currentProgress >= 100) {
-                clearInterval(interval);
-                // Navigate to Report page
-                setTimeout(() => {
-                    router.push("/report");
-                }, 500); // Slight delay for visual completion
-            }
-        }, intervalTime);
-
-        return () => clearInterval(interval);
+        startSearch();
     }, [router]);
 
     return (
@@ -100,15 +184,46 @@ export default function AgentProgressWidget() {
                         >
                             <div className={styles.iconContainer}>
                                 {task.status === "completed" && (
-                                    <svg className={styles.checkIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <svg
+                                        className={styles.checkIcon}
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="3"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
                                         <polyline points="20 6 9 17 4 12"></polyline>
                                     </svg>
                                 )}
                                 {task.status === "processing" && (
                                     <div className={styles.spinner} />
                                 )}
+                                {task.status === "error" && (
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="#ef4444"
+                                        strokeWidth="2"
+                                    >
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="15" y1="9" x2="9" y2="15" />
+                                        <line x1="9" y1="9" x2="15" y2="15" />
+                                    </svg>
+                                )}
                                 {task.status === "pending" && (
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#334155" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="#334155"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
                                         <circle cx="12" cy="12" r="10"></circle>
                                     </svg>
                                 )}
@@ -118,8 +233,14 @@ export default function AgentProgressWidget() {
                     ))}
                 </div>
 
-                {tasks.some(t => t.status === "processing") && (
-                    <div className={styles.statusText}>Searching for the most relevant content...</div>
+                {!error && tasks.some((t) => t.status === "processing") && (
+                    <div className={styles.statusText}>{currentMessage}</div>
+                )}
+
+                {error && (
+                    <div className={styles.statusText} style={{ color: "#ef4444" }}>
+                        Error: {error}
+                    </div>
                 )}
             </div>
         </div>

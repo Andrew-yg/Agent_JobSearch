@@ -1,0 +1,30 @@
+# Core Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.9
+
+# LLM & RAG
+langchain==0.3.7
+langgraph==0.2.53
+openai==1.55.0
+chromadb==0.5.18
+
+# Document Processing
+pypdf2==3.0.1
+pdfplumber==0.11.4
+
+# Database
+sqlalchemy==2.0.36
+
+# Utilities
+python-dotenv==1.0.1
+pydantic==2.10.0
+pydantic-settings==2.6.1
+
+# Browser Automation (fallback if MCP not available)
+playwright==1.49.0
+browser-use==0.1.18
+
+# Async
+httpx==0.28.0
+aiofiles==24.1.0

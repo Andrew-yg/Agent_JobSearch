@@ -1,4 +1,4 @@
-"""Search router - Job search with SSE streaming."""
+"""Search router - Job search with SSE streaming using LangGraph Agent."""
 import asyncio
 import json
 import time
@@ -9,6 +9,7 @@ from fastapi.responses import StreamingResponse
 
 from ..models import JobSearchRequest, SearchResult, SearchProgress
 from ..services.browser_agent import get_browser_agent
+from ..services.langgraph_agent import LangGraphJobAgent
 from ..services.rag_engine import RAGEngine
 from ..services.llm_scorer import LLMScorer
 
@@ -19,13 +20,11 @@ async def search_stream(request: JobSearchRequest) -> AsyncGenerator[str, None]:
     """
     Stream search progress using Server-Sent Events (SSE).
     
-    Flow:
-    1. Check LinkedIn login
-    2. Search jobs with browser automation
-    3. Store jobs in vector DB
-    4. RAG matching
-    5. LLM scoring
-    6. Return top 10
+    Flow (LangGraph State Machine):
+    1. Initialize browser and check LinkedIn login
+    2. LangGraph Agent: analyze_page → validate_selectors → extract_data → validate_data → pagination
+    3. Store jobs in vector DB (RAG matching)
+    4. LLM scoring for top 10
     """
     start_time = time.time()
     jobs_collected = []
@@ -34,17 +33,17 @@ async def search_stream(request: JobSearchRequest) -> AsyncGenerator[str, None]:
         # Step 1: Initialize browser
         yield f"data: {json.dumps({'step': 1, 'total': 4, 'status': 'processing', 'message': 'Initializing browser...'})}\n\n"
         
-        agent = await get_browser_agent()
+        browser_agent = await get_browser_agent()
         
         # Check login
-        is_logged_in = await agent.check_login_status()
+        is_logged_in = await browser_agent.check_login_status()
         if not is_logged_in:
             yield f"data: {json.dumps({'step': 1, 'total': 4, 'status': 'waiting', 'message': 'Please log in to LinkedIn in the opened browser window...'})}\n\n"
             
             # Wait for user to login (max 2 minutes)
             for _ in range(24):
                 await asyncio.sleep(5)
-                is_logged_in = await agent.check_login_status()
+                is_logged_in = await browser_agent.check_login_status()
                 if is_logged_in:
                     break
             
@@ -54,25 +53,30 @@ async def search_stream(request: JobSearchRequest) -> AsyncGenerator[str, None]:
         
         yield f"data: {json.dumps({'step': 1, 'total': 4, 'status': 'completed', 'message': 'Browser ready, logged in to LinkedIn'})}\n\n"
         
-        # Step 2: Search jobs
-        yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'processing', 'message': 'Searching LinkedIn jobs...'})}\n\n"
+        # Step 2: LangGraph Agent for intelligent job extraction
+        yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'processing', 'message': '🧠 Starting LangGraph Agent...'})}\n\n"
         
-        async for update in agent.search_jobs(
+        # Create LangGraph agent with browser agent
+        langgraph_agent = LangGraphJobAgent(browser_agent)
+        
+        # Run the agent
+        async for update in langgraph_agent.run(
             keywords=request.keywords,
             location=request.location,
             experience=request.experience.value,
             posted_time=request.posted_time.value,
             job_type=request.job_type.value,
-            max_jobs=50
+            max_jobs=50,
+            max_pages=5
         ):
             if update["type"] == "progress":
                 yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'processing', 'message': update['message']})}\n\n"
             elif update["type"] == "job":
                 jobs_collected.append(update["data"])
-                yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'processing', 'message': f'Found {len(jobs_collected)} jobs...'})}\n\n"
+                yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'processing', 'message': f'📊 Found {len(jobs_collected)} jobs...'})}\n\n"
             elif update["type"] == "complete":
                 total_count = update["total"]
-                yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'completed', 'message': f'Collected {total_count} jobs'})}\n\n"
+                yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'completed', 'message': f'✅ LangGraph Agent collected {total_count} jobs'})}\n\n"
         
         if not jobs_collected:
             yield f"data: {json.dumps({'step': 2, 'total': 4, 'status': 'error', 'message': 'No jobs found matching criteria'})}\n\n"

@@ -6,6 +6,7 @@ python-multipart==0.0.9
 # LLM & RAG
 langchain==0.3.7
 langgraph==0.2.53
+langchain-openai==0.2.5
 openai==1.55.0
 chromadb==0.5.18
 
